@@ -54,10 +54,7 @@ const userSchema = new schema(
         type:String,
 
      }
-     
-            
-     
-     
+   
 
     },
     {timestamps:true}
