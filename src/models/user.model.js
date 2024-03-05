@@ -1,9 +1,12 @@
-import mongoose , {schema} from "mongoose" ;
+// import mongoose , {schema} from "mongoose";
+import mongoose from "mongoose"
+import pkg from 'mongoose';
+const {Schema} = pkg;
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
-const userSchema = new schema(
+const userSchema = new Schema(
     {
   
      username:{
@@ -41,7 +44,7 @@ const userSchema = new schema(
      },
      
      watchHistory:[
-        {type:monggose.Schema.ObjectId,
+        {type:mongoose.Schema.ObjectId,
          ref:"Video",
         }
      ],
@@ -62,7 +65,7 @@ const userSchema = new schema(
 
 userSchema.pre("save",async function(next){
     if(!this.isModified("password")) return next();
-    this.password = bcrypt.hash(this.password,10)
+    this.password = await bcrypt.hash(this.password, 10)
     next()
 })
 
