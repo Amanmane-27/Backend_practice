@@ -1,11 +1,10 @@
 import {asyncHandler} from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/Apierror.js";
 import {User} from "../models/user.model.js";
-import {uploadOnCloudinar} from "../utils/cloudinary";
-import { ApiResponce } from "../utils/apiResponce.js";
+import {uploadOnCloudinar} from "../utils/cloudinary.js";
+import { ApiResponse } from "../utils/apiResponse.js";
 
 const registerUser = asyncHandler( async (req,res) => {
-    console.log(req.body)
     //step 1: Get user details from frontend;
     //step 2: validation:(not empty)
     //step 3: cheak if user already exists:username , email;
@@ -17,22 +16,22 @@ const registerUser = asyncHandler( async (req,res) => {
     //step 8: return res;
     
     
-    const {fullname,email,username,password} = req.body;
-    console.log("fullname",fullname);
+    const {fullName,email,username,password,} = req.body;
+    // console.log("fullname",fullname);
     
   
     // if(fullname===""){
     //     throw new ApiError(400,"fullnameis required");
     // }
  
-     if ([fullname,email,username,password].some((field) => 
+     if ([fullName,email,username,password].some((field) => 
      field?.trim() === "")
      ) 
      {
         throw new ApiError(400,"All fields are required ");
      }
 
-    const existedUser = User.findOne({
+    const existedUser = await User.findOne({
         $or: [{username},{email}]
     });
 
@@ -44,7 +43,7 @@ const registerUser = asyncHandler( async (req,res) => {
     const avatarLocalPath =req.files?.avatar[0]?.path;
     const coverImageLocalPath = req.files?.coverImage[0]?.path;
      
-    if (!avatar) {
+    if (!avatarLocalPath) {
       throw new ApiError(400,"Avatar file is required");
     }
     
@@ -54,15 +53,15 @@ const registerUser = asyncHandler( async (req,res) => {
     if (!avatar) {throw new ApiError(400,"Avatar file is required");}
 
     const user =await User.create({
-        fullname,
+        fullName,
         avatar : avatar.url,
         coverImage:coverImage?.url || "" ,
         email,
         password,
-        username: username.toLowercase()
+        username: username.toLowerCase()
     })
 
-    const createdUser =await User.findById(user.id).select(
+    const createdUser =await User.findById(user._id).select(
         "-password -refreshToken"
     )
 
@@ -71,7 +70,7 @@ const registerUser = asyncHandler( async (req,res) => {
     }
      
     return res.status(201).json(
-        new ApiResponce(200,createdUser,"User register successfully")
+        new ApiResponse(200,createdUser,"User register successfully")
     );
 
 

@@ -1,7 +1,5 @@
 // import mongoose , {schema} from "mongoose";
-import mongoose from "mongoose"
-import pkg from 'mongoose';
-const {Schema} = pkg;
+import mongoose , {Schema} from "mongoose"
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -18,7 +16,7 @@ const userSchema = new Schema(
         index:true,
      },
      
-     Email:{
+     email:{
         type:String,
         required:true,
         unique:true,
@@ -26,7 +24,7 @@ const userSchema = new Schema(
         trim:true,
      },
      
-     fullname:{
+     fullName :{
         type:String,
         required:true,
         trim:true,
@@ -38,9 +36,8 @@ const userSchema = new Schema(
         required:true,
             },
      
-     coverimage:{
+     coverImage:{
         type:String,
-        
      },
      
      watchHistory:[
